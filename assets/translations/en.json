@@ -1,0 +1,26 @@
+{
+    "common": {
+        "retry_button": "Retry"
+    },
+    "home": {
+        "title": "Rankings",
+        "search_hint": "Search ...",
+        "no_results_title": "No results found",
+        "no_results_message": "Try searching with different keywords."
+    },
+    "errors": {
+        "no_internet": "No internet connection",
+        "server": "Server error",
+        "bad_request": "Bad request",
+        "forbidden": "Forbidden",
+        "not_found": "Resource not found",
+        "unauthorized": "Unauthorized",
+        "expired_session": "Session expired",
+        "invalid_credential": "Invalid credential",
+        "invalid_email": "Invalid email",
+        "email_already_in_use": "Email already in use",
+        "weak_password": "Weak password",
+        "operation_not_allowed": "Operation not allowed",
+        "unknown": "Something went wrong"
+    }
+}
