@@ -1,17 +1,22 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:images/domain/entities/ranking_item.dart';
 import 'package:images/domain/usecases/get_default_ranking_search_usecase.dart';
 import 'package:images/domain/usecases/get_ranking_usecase.dart';
 import 'package:images/presentation/util/error_extension.dart';
 import 'package:images/presentation/viewmodels/root_viewmodel.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logger/logger.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 @Injectable()
 class HomeViewModel extends RootViewModel<HomeViewModelState> {
   static const _searchDelay = 500;
 
+  final Logger logger;
   final GetRankingUseCase _getImagesUseCase;
   final GetDefaultRankingSearchUseCase _getDefaultRankingSearchUseCase;
 
@@ -24,6 +29,7 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
   bool get isSearchEmpty => searchController.text.isEmpty;
 
   HomeViewModel(
+    this.logger,
     this._getImagesUseCase,
     this._getDefaultRankingSearchUseCase,
   ) : super(const Success()) {
@@ -68,13 +74,35 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
     });
   }
 
-  void onItemClick(RankingItem item) {
-    // TODO: Implement navigation
-  }
-
   void clearSearch() {
     _query = '';
     searchController.clear();
+  }
+
+  void onItemClick(RankingItem item) {
+    _launchUrl(item.link);
+  }
+
+  void _launchUrl(String? url) async {
+    if (url == null || url.isEmpty) {
+      emitValue(Error('home.invalid_url'.tr()));
+    } else {
+      try {
+        final Uri uri = Uri.parse(url);
+        if (!await launchUrl(uri)) {
+          // if the URL was NOT launched successfully
+          emitValue(Error('home.invalid_url'.tr()));
+        }
+      } on FormatException catch (e) {
+        logger.e(e.message, error: e);
+        // Handle FormatException
+        emitValue(Error('home.invalid_url'.tr()));
+      } on PlatformException catch (e) {
+        logger.e(e.message, error: e);
+        // Handle PlatformException
+        emitValue(Error('home.invalid_url'.tr()));
+      }
+    }
   }
 }
 

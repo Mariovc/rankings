@@ -6,7 +6,8 @@
         "title": "Rankings",
         "search_hint": "Search for your favorite rankings!",
         "no_results_title": "No results found",
-        "no_results_message": "Try searching with different keywords."
+        "no_results_message": "Try searching with different keywords.",
+        "invalid_url": "Invalid URL"
     },
     "errors": {
         "no_internet": "No internet connection",

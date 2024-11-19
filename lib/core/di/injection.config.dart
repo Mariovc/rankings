@@ -57,11 +57,12 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i453.RankingLocalDatasource>(),
           gh<_i585.RankingRemoteDatasource>(),
         ));
-    gh.factory<_i1065.GetRankingUseCase>(
-        () => _i1065.GetRankingUseCase(gh<_i239.RankingRepository>()));
     gh.factory<_i704.GetDefaultRankingSearchUseCase>(() =>
         _i704.GetDefaultRankingSearchUseCase(gh<_i239.RankingRepository>()));
+    gh.factory<_i1065.GetRankingUseCase>(
+        () => _i1065.GetRankingUseCase(gh<_i239.RankingRepository>()));
     gh.factory<_i510.HomeViewModel>(() => _i510.HomeViewModel(
+          gh<_i974.Logger>(),
           gh<_i1065.GetRankingUseCase>(),
           gh<_i704.GetDefaultRankingSearchUseCase>(),
         ));

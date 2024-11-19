@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:images/core/di/injection.dart';
 import 'package:images/presentation/navigation/main_navigation.dart';
 import 'package:images/presentation/styles/theme.dart';
+import 'package:images/presentation/util/globals.dart';
 
 void main() async {
   configureDependencies(env: const String.fromEnvironment('ENVIRONMENT'));
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       theme: darkThemeData,
+      scaffoldMessengerKey: scaffoldMessengerKey,
     );
   }
 }
