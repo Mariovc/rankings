@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:images/core/di/injection.dart';
 import 'package:images/presentation/navigation/main_navigation.dart';
+import 'package:images/presentation/styles/theme.dart';
 
 void main() async {
   configureDependencies(env: const String.fromEnvironment('ENVIRONMENT'));
@@ -33,10 +34,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: darkThemeData,
     );
   }
 }

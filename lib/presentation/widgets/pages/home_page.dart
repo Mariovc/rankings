@@ -28,6 +28,10 @@ class _HomePageState
     HomeViewModelState state,
     HomeViewModel viewModel,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final List<RankingItem> items = viewModel.items;
+
     return Scaffold(
       body: NestedScrollView(
         floatHeaderSlivers: true,
@@ -35,7 +39,13 @@ class _HomePageState
           SliverAppBar(
             pinned: true,
             centerTitle: true,
-            title: Text('home.title'.tr()),
+            title: Text(
+              'home.title'.tr(),
+              style: textTheme.displayMedium?.copyWith(
+                  color: colorScheme.secondary,
+                  // fontSize: 20,
+                  fontWeight: FontWeight.bold),
+            ),
             forceElevated: innerBoxIsScrolled,
           ),
           SliverAppBar(
@@ -49,14 +59,11 @@ class _HomePageState
               decoration: InputDecoration(
                 hintText: 'home.search_hint'.tr(),
                 hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.7),
+                      color: colorScheme.onSurface.withOpacity(0.7),
                     ),
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor: Theme.of(context).colorScheme.surfaceContainer,
+                fillColor: colorScheme.surfaceContainerHigh,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide.none,
@@ -70,23 +77,116 @@ class _HomePageState
                 preferredSize: Size.fromHeight(8), child: SizedBox()),
           )
         ],
-        body: ListView.separated(
-            itemBuilder: (context, index) {
-              return _getItem(context, viewModel.items[index], index);
-            },
-            separatorBuilder: (context, index) {
-              return const Divider();
-            },
-            itemCount: viewModel.items.length),
+        body: Column(
+          children: [
+            if (items.length >= 3) _buildPodium(items.sublist(0, 3)),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return _getItem(context, items[index], index + 1);
+                },
+                itemCount: items.length,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _getItem(BuildContext context, RankingItem item, int index) {
-    final Color primaryColor = item.dominantColor != null
-        ? Color(int.parse(item.dominantColor.replaceFirst('#', '0xFF')))
-        : Colors.blue;
+  Widget _buildPodium(List<RankingItem> top3) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          _buildPodiumSpot(top3[1], 2, 120),
+          const SizedBox(width: 8),
+          _buildPodiumSpot(top3[0], 1, 140),
+          const SizedBox(width: 8),
+          _buildPodiumSpot(top3[2], 3, 100),
+        ],
+      ),
+    );
+  }
 
+  Widget _buildPodiumSpot(RankingItem item, int rank, double height) {
+    return Column(
+      children: [
+        Stack(
+          children: [
+            Container(
+              width: 70,
+              height: 70,
+              margin: const EdgeInsets.only(bottom: 18),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.secondary,
+                  width: 3,
+                ),
+              ),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(item.imageUrl),
+                radius: 35,
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Text(
+                  _getRankingEmoji(rank),
+                  style: const TextStyle(fontSize: 24),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        SizedBox(
+          width: 92,
+          child: Text(
+            item.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Container(
+          height: height,
+          width: 100,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Theme.of(context).colorScheme.surfaceContainerHigh,
+              Theme.of(context).colorScheme.surfaceContainerLow,
+            ]),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(8),
+              topRight: Radius.circular(8),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              '$rank',
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                    fontSize: 48,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _getItem(BuildContext context, RankingItem item, int rank) {
     return Card(
       elevation: 6,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
@@ -95,109 +195,105 @@ class _HomePageState
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            Text(
-              '#${index + 1}',
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+            Column(
+              children: [
+                Text(
+                  '#$rank',
+                  style: Theme.of(context).textTheme.displaySmall,
+                ),
+                const SizedBox(height: 12),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(item.imageUrl),
+                  radius: 42,
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(Icons.star,
+                        color: Theme.of(context).colorScheme.secondary),
+                    Text(' ${item.rating.toStringAsFixed(1)}'),
+                  ],
+                ),
+              ],
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    item.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
                   Row(
                     children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(item.imageUrl),
-                        radius: 30,
+                      Text(
+                        DateFormat.yMMMd().format(item.timestamp),
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.title,
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              item.description,
-                              style: TextStyle(
-                                  fontSize: 14, color: Colors.grey[600]),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
+                      const SizedBox(width: 8),
+                      Text(_getEmojiFlag(item.country)),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, color: Colors.amber),
-                      Text(' ${item.rating}/5'),
-                      const Spacer(),
-                      Row(
-                        children: [
-                          const Icon(Icons.location_pin,
-                              color: Colors.redAccent),
-                          Text(item.location,
-                              style: const TextStyle(fontSize: 12)),
-                        ],
-                      ),
-                      const SizedBox(width: 10),
-                      CircleAvatar(
-                        backgroundColor: Colors.grey[300],
-                        child: Text(
-                          item.country,
-                          style: const TextStyle(
-                              fontSize: 10, fontWeight: FontWeight.bold),
+                  if (item.categories.isNotEmpty)
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 4.0,
+                      children: item.categories.map((category) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            category,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium
+                                ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  const SizedBox(height: 8),
+                  Text(
+                    item.description,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.6),
                         ),
-                      ),
-                    ],
                   ),
-                  const SizedBox(height: 10),
                   if (item.awards.isNotEmpty)
                     Wrap(
                       spacing: 8.0,
                       children: item.awards
-                          .map((award) => Chip(
-                              label: Text(award,
-                                  style: const TextStyle(fontSize: 12))))
+                          .map(
+                            (award) => Chip(
+                              avatar: const Icon(
+                                Icons.emoji_events_outlined,
+                              ),
+                              label: Text(
+                                award,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(fontSize: 12),
+                              ),
+                            ),
+                          )
                           .toList(),
                     ),
-                  const SizedBox(height: 10),
-                  LinearProgressIndicator(
-                    value: item.score / 100,
-                    backgroundColor: Colors.grey[300],
-                    color: primaryColor,
-                    minHeight: 8,
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.thumb_up, color: Colors.blueAccent),
-                          const SizedBox(width: 4),
-                          Text('${item.likes} Likes'),
-                        ],
-                      ),
-                      TextButton(
-                        onPressed: () => print(
-                            'Open ${item.link}'), // Use url_launcher in production
-                        child: const Text('More Info',
-                            style: TextStyle(color: Colors.blue)),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -205,5 +301,23 @@ class _HomePageState
         ),
       ),
     );
+  }
+
+  String _getRankingEmoji(int rank) {
+    switch (rank) {
+      case 1:
+        return '🥇';
+      case 2:
+        return '🥈';
+      case 3:
+        return '🥉';
+      default:
+        return '';
+    }
+  }
+
+  String _getEmojiFlag(String countryCode) {
+    return String.fromCharCodes(
+        countryCode.codeUnits.map((c) => 0x1F1E6 - 0x41 + c));
   }
 }
