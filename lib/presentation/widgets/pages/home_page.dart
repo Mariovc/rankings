@@ -72,7 +72,6 @@ class _HomePageState
                         icon: const Icon(Icons.clear),
                         onPressed: () {
                           _focusNode.requestFocus();
-                          // Clear the search field
                           viewModel.clearSearch();
                         },
                       ),
@@ -86,10 +85,10 @@ class _HomePageState
                     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12),
               ),
               textCapitalization: TextCapitalization.sentences,
+              textInputAction: TextInputAction.search,
+              onSubmitted: viewModel.search,
               onChanged: (value) {
-                setState(() {
-                  viewModel.search(value);
-                });
+                setState(() {});
               },
             ),
           ),

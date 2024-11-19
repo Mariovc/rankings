@@ -14,14 +14,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 @Injectable()
 class HomeViewModel extends RootViewModel<HomeViewModelState> {
-  static const _searchDelay = 500;
-
   final Logger logger;
   final GetRankingUseCase _getImagesUseCase;
   final GetDefaultRankingSearchUseCase _getDefaultRankingSearchUseCase;
 
   String _query = '';
-  Timer? _debounce;
   final List<RankingItem> _items = [];
 
   final searchController = TextEditingController();
@@ -33,17 +30,17 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
     this._getImagesUseCase,
     this._getDefaultRankingSearchUseCase,
   ) : super(const Success()) {
-    setSeachQuery();
-    loadItems();
+    _setSeachQuery();
+    _loadItems();
   }
 
-  void setSeachQuery() {
+  void _setSeachQuery() {
     _getDefaultRankingSearchUseCase().then(
       (result) => searchController.text = result.isRight ? result.right : '',
     );
   }
 
-  Future<void> loadItems([String? query]) async {
+  Future<void> _loadItems([String? query]) async {
     emitValue(const Loading());
     _query = query ?? '';
     final result = await _getImagesUseCase(
@@ -60,18 +57,7 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
   }
 
   void search(String value) {
-    if (value.isNotEmpty) _delayedSearch(value);
-  }
-
-  void _delayedSearch(String query) {
-    // Cancel any existing timer
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-
-    // Start a new timer
-    _debounce = Timer(const Duration(milliseconds: _searchDelay), () {
-      // Perform the search operation
-      loadItems(query);
-    });
+    if (value.isNotEmpty) _loadItems(value);
   }
 
   void clearSearch() {
