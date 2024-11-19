@@ -127,8 +127,8 @@ class _HomePageState
                   width: 3,
                 ),
               ),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(item.imageUrl),
+              child: const CircleAvatar(
+                backgroundImage: NetworkImage(''), // TODO set image
                 radius: 35,
               ),
             ),
@@ -147,10 +147,10 @@ class _HomePageState
         ),
         const SizedBox(height: 4),
         SizedBox(
-          width: 92,
+          width: 100,
           child: Text(
             item.title,
-            maxLines: 2,
+            maxLines: 3,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -202,18 +202,20 @@ class _HomePageState
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
                 const SizedBox(height: 12),
-                CircleAvatar(
-                  backgroundImage: NetworkImage(item.imageUrl),
+                const CircleAvatar(
+                  backgroundImage: NetworkImage(''), // TODO set image
                   radius: 42,
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(Icons.star,
-                        color: Theme.of(context).colorScheme.secondary),
-                    Text(' ${item.rating.toStringAsFixed(1)}'),
-                  ],
-                ),
+                if (item.rating != null) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.star,
+                          color: Theme.of(context).colorScheme.secondary),
+                      Text(' ${item.rating!.toStringAsFixed(1)}'),
+                    ],
+                  ),
+                ]
               ],
             ),
             const SizedBox(width: 12),
@@ -223,20 +225,24 @@ class _HomePageState
                 children: [
                   Text(
                     item.title,
-                    maxLines: 2,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        DateFormat.yMMMd().format(item.timestamp),
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(_getEmojiFlag(item.country)),
-                    ],
-                  ),
+                  if (item.timestamp != null || item.countryCode != null)
+                    Row(
+                      children: [
+                        if (item.timestamp != null) ...[
+                          Text(
+                            DateFormat.yMMMd().format(item.timestamp!),
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                        if (item.countryCode != null)
+                          Text(_getEmojiFlag(item.countryCode!)),
+                      ],
+                    ),
                   if (item.categories.isNotEmpty)
                     Wrap(
                       spacing: 8.0,

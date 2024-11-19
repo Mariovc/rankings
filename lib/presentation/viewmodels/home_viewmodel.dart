@@ -20,10 +20,13 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
 
   HomeViewModel(
     this._getImagesUseCase,
-  ) : super(const Success());
+  ) : super(const Success()) {
+    loadItems();
+  }
 
-  Future<void> loadItems() async {
+  Future<void> loadItems([String? query]) async {
     emitValue(const Loading());
+    _query = query ?? '';
     final result = await _getImagesUseCase(
       query: _query,
     );
@@ -38,18 +41,17 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
   }
 
   void search(String value) {
-    _query = value;
-    _delayedSearch();
+    if (value.isNotEmpty) _delayedSearch(value);
   }
 
-  void _delayedSearch() {
+  void _delayedSearch(String query) {
     // Cancel any existing timer
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     // Start a new timer
     _debounce = Timer(const Duration(milliseconds: _searchDelay), () {
       // Perform the search operation
-      loadItems();
+      loadItems(query);
     });
   }
 

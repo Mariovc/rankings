@@ -1,0 +1,146 @@
+[
+    {
+        "title": "The Lean Startup by Eric Ries",
+        "description": "Build businesses using continuous innovation.",
+        "rating": 5,
+        "countryCode": "US",
+        "awards": [
+            "Best Business Book Award Nominee"
+        ],
+        "categories": [
+            "Entrepreneurship",
+            "Innovation",
+            "Startups"
+        ],
+        "link": "https://en.wikipedia.org/wiki/The_Lean_Startup",
+        "timestamp": 1315872000
+    },
+    {
+        "title": "Zero to One by Peter Thiel",
+        "description": "Insights on startups and creating monopolies.",
+        "rating": 5,
+        "countryCode": "US",
+        "awards": [
+            "Goodreads Choice Nominee"
+        ],
+        "categories": [
+            "Entrepreneurship",
+            "Technology",
+            "Startups"
+        ],
+        "link": "https://en.wikipedia.org/wiki/Zero_to_One",
+        "timestamp": 1410825600
+    },
+    {
+        "title": "The Hard Thing About Hard Things",
+        "description": "Tackling the tough challenges of business.",
+        "rating": 4.5,
+        "countryCode": "US",
+        "awards": null,
+        "categories": [
+            "Entrepreneurship",
+            "Leadership",
+            "Management"
+        ],
+        "link": "https://en.wikipedia.org/wiki/Ben_Horowitz",
+        "timestamp": 1395100800
+    },
+    {
+        "title": "Think and Grow Rich by Napoleon Hill",
+        "description": "A classic on mindset and financial success.",
+        "rating": 4.5,
+        "countryCode": "US",
+        "awards": null,
+        "categories": [
+            "Entrepreneurship",
+            "Self-help",
+            "Finance"
+        ],
+        "link": "https://en.wikipedia.org/wiki/Think_and_Grow_Rich",
+        "timestamp": -1104537600
+    },
+    {
+        "title": "Rich Dad Poor Dad by Robert Kiyosaki",
+        "description": "Financial literacy and investment basics.",
+        "rating": 4.5,
+        "countryCode": "US",
+        "awards": null,
+        "categories": [
+            "Entrepreneurship",
+            "Finance",
+            "Self-help"
+        ],
+        "link": "https://en.wikipedia.org/wiki/Rich_Dad_Poor_Dad",
+        "timestamp": 894931200
+    },
+    {
+        "title": "Start with Why by Simon Sinek",
+        "description": "Discover your purpose and inspire others.",
+        "rating": 4.5,
+        "countryCode": "US",
+        "awards": null,
+        "categories": [
+            "Entrepreneurship",
+            "Leadership",
+            "Motivation"
+        ],
+        "link": "https://en.wikipedia.org/wiki/Simon_Sinek",
+        "timestamp": 1251763200
+    },
+    {
+        "title": "Blue Ocean Strategy by Kim & Mauborgne",
+        "description": "Creating new market spaces to avoid competition.",
+        "rating": 4.5,
+        "countryCode": "FR",
+        "awards": null,
+        "categories": [
+            "Entrepreneurship",
+            "Strategy",
+            "Innovation"
+        ],
+        "link": "https://en.wikipedia.org/wiki/Blue_Ocean_Strategy",
+        "timestamp": 1108684800
+    },
+    {
+        "title": "The E-Myth Revisited by Michael Gerber",
+        "description": "Why most small businesses fail and succeed.",
+        "rating": 4.5,
+        "countryCode": "US",
+        "awards": null,
+        "categories": [
+            "Entrepreneurship",
+            "Small Business",
+            "Management"
+        ],
+        "link": "https://en.wikipedia.org/wiki/Michael_E._Gerber",
+        "timestamp": 883612800
+    },
+    {
+        "title": "Crushing It! by Gary Vaynerchuk",
+        "description": "Personal branding for entrepreneurial success.",
+        "rating": 4.0,
+        "countryCode": "US",
+        "awards": null,
+        "categories": [
+            "Entrepreneurship",
+            "Social Media",
+            "Marketing"
+        ],
+        "link": "https://en.wikipedia.org/wiki/Gary_Vaynerchuk",
+        "timestamp": 1516838400
+    },
+    {
+        "title": "Rework by Jason Fried & D. Heinemeier Hansson",
+        "description": "Rethinking conventional business wisdom.",
+        "rating": 4.0,
+        "countryCode": "US",
+        "awards": null,
+        "categories": [
+            "Entrepreneurship",
+            "Business",
+            "Productivity"
+        ],
+        "link": "https://en.wikipedia.org/wiki/Rework_(book)",
+        "timestamp": 1267401600
+    }
+]

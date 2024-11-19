@@ -3,20 +3,22 @@ import 'package:images/domain/entities/ranking_item.dart';
 class RankingTransformer {
   static RankingItem fromJson(Map<String, dynamic> json) {
     return RankingItem(
-      title: json['title'],
-      description: json['description'],
-      imageUrl: json['image_url'],
-      rating: json['rating'],
-      score: json['score'],
-      location: json['location'],
-      awards: List<String>.from(json['awards']),
-      categories: List<String>.from(json['categories']),
-      dominantColor: json['dominant_color'],
-      link: json['link'],
-      price: json['price'],
-      likes: json['likes'],
-      timestamp: DateTime.fromMillisecondsSinceEpoch(json['timestamp'] * 1000),
-      country: json['country'],
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      rating: (json['rating'] as num?)?.toDouble(),
+      countryCode: json['countryCode'] as String?,
+      awards: (json['awards'] as List<dynamic>?)
+              ?.map((award) => award as String)
+              .toList() ??
+          [],
+      categories: (json['categories'] as List<dynamic>?)
+              ?.map((category) => category as String)
+              .toList() ??
+          [],
+      link: json['link'] as String?,
+      timestamp: json['timestamp'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(json['timestamp'] * 1000)
+          : null,
     );
   }
 }
