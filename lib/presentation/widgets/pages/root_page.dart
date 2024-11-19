@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:images/core/di/injection.dart';
-import 'package:images/presentation/viewmodels/root_viewmodel.dart';
+import 'package:ranking/core/di/injection.dart';
+import 'package:ranking/presentation/viewmodels/root_viewmodel.dart';
 
 abstract class RootPage<S extends ViewState, V extends RootViewModel<S>>
     extends StatelessWidget {
@@ -22,8 +22,8 @@ abstract class RootPage<S extends ViewState, V extends RootViewModel<S>>
   Widget buildView(BuildContext context, S state, V viewModel);
 }
 
-abstract class RootPageStateful<T extends ViewState,
-    V extends RootViewModel<T>> extends StatefulWidget {
+abstract class RootPageStateful<T extends ViewState, V extends RootViewModel<T>>
+    extends StatefulWidget {
   const RootPageStateful({super.key});
 
   @override

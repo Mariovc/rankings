@@ -1,7 +1,7 @@
 import 'package:either_dart/either.dart';
-import 'package:images/domain/entities/errors.dart';
-import 'package:images/domain/entities/ranking_item.dart';
-import 'package:images/domain/repositories/ranking_repository.dart';
+import 'package:ranking/domain/entities/errors.dart';
+import 'package:ranking/domain/entities/ranking_item.dart';
+import 'package:ranking/domain/repositories/ranking_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable()

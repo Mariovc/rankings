@@ -1,6 +1,6 @@
-import 'package:images/data/services/dio_service.dart';
-import 'package:images/data/transformers/error_transformer.dart';
-import 'package:images/domain/entities/errors.dart';
+import 'package:ranking/data/services/dio_service.dart';
+import 'package:ranking/data/transformers/error_transformer.dart';
+import 'package:ranking/domain/entities/errors.dart';
 import 'package:injectable/injectable.dart';
 
 class ApiService extends DioRestService<MainError> {

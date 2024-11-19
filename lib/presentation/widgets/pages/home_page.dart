@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:images/domain/entities/ranking_item.dart';
-import 'package:images/presentation/util/extension/snackbar_extension.dart';
-import 'package:images/presentation/viewmodels/home_viewmodel.dart';
-import 'package:images/presentation/widgets/pages/root_page.dart';
+import 'package:ranking/domain/entities/ranking_item.dart';
+import 'package:ranking/presentation/util/extension/snackbar_extension.dart';
+import 'package:ranking/presentation/viewmodels/home_viewmodel.dart';
+import 'package:ranking/presentation/widgets/pages/root_page.dart';
 
 class HomePage extends RootPageStateful<HomeViewModelState, HomeViewModel> {
   const HomePage({super.key});
@@ -22,7 +22,7 @@ class _HomePageState
     super.dispose();
     _focusNode.dispose();
   }
-  
+
   @override
   void listenState(BuildContext context, HomeViewModelState state) {
     super.listenState(context, state);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:images/presentation/util/globals.dart';
+import 'package:ranking/presentation/util/globals.dart';
 
 extension SnackbarExtension on String {
   void showMessage() {

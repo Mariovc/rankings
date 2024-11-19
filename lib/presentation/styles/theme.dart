@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:images/presentation/styles/app_colors.dart';
+import 'package:ranking/presentation/styles/app_colors.dart';
 
 final darkThemeData = ThemeData(
   useMaterial3: true,

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:either_dart/either.dart';
-import 'package:images/data/datasources/ranking/ranking_local_datasource.dart';
-import 'package:images/data/transformers/ranking_transformer.dart';
-import 'package:images/domain/entities/errors.dart';
-import 'package:images/domain/entities/ranking_item.dart';
+import 'package:ranking/data/datasources/ranking/ranking_local_datasource.dart';
+import 'package:ranking/data/transformers/ranking_transformer.dart';
+import 'package:ranking/domain/entities/errors.dart';
+import 'package:ranking/domain/entities/ranking_item.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 

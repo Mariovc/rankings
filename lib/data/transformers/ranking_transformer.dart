@@ -1,4 +1,4 @@
-import 'package:images/domain/entities/ranking_item.dart';
+import 'package:ranking/domain/entities/ranking_item.dart';
 
 class RankingTransformer {
   static RankingItem fromJson(Map<String, dynamic> json) {

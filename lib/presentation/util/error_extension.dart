@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:images/domain/entities/errors.dart';
+import 'package:ranking/domain/entities/errors.dart';
 
 extension ErrorMessage on MainError {
   String get message {

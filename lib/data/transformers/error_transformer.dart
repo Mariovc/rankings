@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:images/domain/entities/errors.dart';
+import 'package:ranking/domain/entities/errors.dart';
 
 /// Convert dio errors to domain errors
 MainError errorsHandler(DioException error) {
