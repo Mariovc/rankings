@@ -4,7 +4,7 @@
     },
     "home": {
         "title": "Rankings",
-        "search_hint": "Search ...",
+        "search_hint": "Search for your favorite rankings!",
         "no_results_title": "No results found",
         "no_results_message": "Try searching with different keywords."
     },

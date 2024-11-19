@@ -6,4 +6,5 @@ abstract class RankingRepository {
   Future<Either<MainError, List<RankingItem>>> getRanking({
     required String query,
   });
+  Future<Either<MainError, String>> getDefaultRankingSearch();
 }

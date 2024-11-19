@@ -4,4 +4,5 @@ import 'package:images/domain/entities/ranking_item.dart';
 
 abstract class RankingLocalDatasource {
   Future<Either<MainError, List<RankingItem>>> getDefaultRanking();
+  Future<Either<MainError, String>> getDefaultRankingSearch();
 }

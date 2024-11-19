@@ -9,10 +9,10 @@ import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 
 @Injectable(as: RankingLocalDatasource)
-class RankingChatGpt implements RankingLocalDatasource {
+class RankingAsset implements RankingLocalDatasource {
   final Logger logger;
 
-  RankingChatGpt(this.logger);
+  RankingAsset(this.logger);
 
   @override
   Future<Either<MainError, List<RankingItem>>> getDefaultRanking() async {
@@ -41,5 +41,12 @@ class RankingChatGpt implements RankingLocalDatasource {
       logger.e(e);
       return Left(UnknownError());
     }
+  }
+
+  @override
+  Future<Either<MainError, String>> getDefaultRankingSearch() async {
+    return const Right(
+      'Give me the most 10 books of entrepreneurship',
+    );
   }
 }

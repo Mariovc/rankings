@@ -26,4 +26,9 @@ class RankingRepositoryImpl implements RankingRepository {
       return remoteDataSource.getRanking(query: query);
     }
   }
+
+  @override
+  Future<Either<MainError, String>> getDefaultRankingSearch() {
+    return localDataSource.getDefaultRankingSearch();
+  }
 }

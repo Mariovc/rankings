@@ -1,6 +1,7 @@
 class RankingItem {
   final String title;
   final String description;
+  final String? imageUrl;
   final double? rating;
   final String? countryCode;
   final List<String> awards;
@@ -11,6 +12,7 @@ class RankingItem {
   RankingItem({
     required this.title,
     required this.description,
+    this.imageUrl,
     required this.rating,
     required this.awards,
     required this.categories,

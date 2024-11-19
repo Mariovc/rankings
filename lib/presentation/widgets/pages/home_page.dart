@@ -31,29 +31,24 @@ class _HomePageState
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final List<RankingItem> items = viewModel.items;
+    final buildPodium = items.length >= 3;
 
     return Scaffold(
-      body: NestedScrollView(
-        floatHeaderSlivers: true,
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverAppBar(
-            pinned: true,
-            centerTitle: true,
-            title: Text(
-              'home.title'.tr(),
-              style: textTheme.displayMedium?.copyWith(
-                  color: colorScheme.secondary,
-                  // fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            ),
-            forceElevated: innerBoxIsScrolled,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'home.title'.tr(),
+          style: textTheme.displayMedium?.copyWith(
+            color: colorScheme.secondary,
+            fontWeight: FontWeight.bold,
           ),
-          SliverAppBar(
-            primary: false,
-            floating: true,
-            snap: true,
-            forceElevated: innerBoxIsScrolled,
-            title: TextField(
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: viewModel.searchController,
               focusNode: _focusNode,
               onTapOutside: (event) => _focusNode.unfocus(),
               decoration: InputDecoration(
@@ -62,34 +57,51 @@ class _HomePageState
                       color: colorScheme.onSurface.withOpacity(0.7),
                     ),
                 prefixIcon: const Icon(Icons.search),
+                suffixIcon: viewModel.isSearchEmpty
+                    ? null
+                    : IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _focusNode.requestFocus();
+                          // Clear the search field
+                          viewModel.clearSearch();
+                        },
+                      ),
                 filled: true,
                 fillColor: colorScheme.surfaceContainerHigh,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12),
               ),
               textCapitalization: TextCapitalization.sentences,
-              onChanged: viewModel.search,
+              onChanged: (value) {
+                setState(() {
+                  viewModel.search(value);
+                });
+              },
             ),
-            bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(8), child: SizedBox()),
-          )
-        ],
-        body: Column(
-          children: [
-            if (items.length >= 3) _buildPodium(items.sublist(0, 3)),
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return _getItem(context, items[index], index + 1);
-                },
-                itemCount: items.length,
-              ),
-            ),
-          ],
+          ),
         ),
+      ),
+      body: ListView.builder(
+        // Add 1 for the podium
+        itemCount: items.length + (buildPodium ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (buildPodium && index == 0) {
+            // Return the podium as the first item
+            return _buildPodium(items.sublist(0, 3));
+          } else {
+            // Return the list items
+            return _getItem(
+              context,
+              items[buildPodium ? index - 1 : index],
+              index,
+            );
+          }
+        },
       ),
     );
   }
@@ -127,10 +139,7 @@ class _HomePageState
                   width: 3,
                 ),
               ),
-              child: const CircleAvatar(
-                backgroundImage: NetworkImage(''), // TODO set image
-                radius: 35,
-              ),
+              child: _getCircularImage(item.imageUrl, size: 35),
             ),
             Positioned(
               bottom: 0,
@@ -202,10 +211,7 @@ class _HomePageState
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
                 const SizedBox(height: 12),
-                const CircleAvatar(
-                  backgroundImage: NetworkImage(''), // TODO set image
-                  radius: 42,
-                ),
+                _getCircularImage(item.imageUrl, size: 42),
                 if (item.rating != null) ...[
                   const SizedBox(height: 8),
                   Row(
@@ -325,5 +331,19 @@ class _HomePageState
   String _getEmojiFlag(String countryCode) {
     return String.fromCharCodes(
         countryCode.codeUnits.map((c) => 0x1F1E6 - 0x41 + c));
+  }
+
+  Widget _getCircularImage(String? imageUrl, {required double size}) {
+    return CircleAvatar(
+      radius: size,
+      backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
+      child: imageUrl == null
+          ? Icon(
+              Icons.broken_image,
+              size: 35,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            )
+          : null,
+    );
   }
 }

@@ -4,7 +4,7 @@
     },
     "home": {
         "title": "Rankings",
-        "search_hint": "Buscar ...",
+        "search_hint": "¡Busca tus rankings favoritos!",
         "no_results_title": "No se encontraron resultados",
         "no_results_message": "Intenta buscar con diferentes palabras clave."
     },
