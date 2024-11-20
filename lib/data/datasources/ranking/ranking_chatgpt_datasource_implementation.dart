@@ -16,6 +16,14 @@ class RankingChatGpt implements RankingRemoteDatasource {
   final ApiService _apiService;
   final Env _envConfig;
 
+  static const String chatModel = 'gpt-4o';
+  static const String chatSystemMessage =
+      "You are an AI assistant that generates detailed, structured rankings in JSON format as a list of items. Each ranking item should include a title (60 characters maximum but as short as possible), description (120 characters maximum), rating (out of 5), countryCode (origin or author's origin in ISO with 2 digits), awards, categories or tags, link, and timestamp (creation date or birthdate in seconds). If any of these parameters are not applicable or available, just set them to null. Detect the user's language to give a response in the same language.";
+  static const int chatMaxTokens = 2000;
+  static const double chatTemperature = 0.7;
+
+  static const String imageSize = '256x256';
+
   RankingChatGpt(this.logger, this._apiService, this._envConfig);
 
   @override
@@ -24,19 +32,19 @@ class RankingChatGpt implements RankingRemoteDatasource {
   }) async {
     final String requestBody = '''
     {
-      "model": "gpt-4o-mini",
+      "model": "$chatModel",
       "messages": [
         {
           "role": "system",
-          "content": "You are an AI assistant that generates detailed, structured rankings in JSON format as a list of items. Each ranking item should include a title (60 characters maximum but as short as possible), description (120 characters maximum), rating (out of 5), countryCode (origin or author's origin in ISO with 2 digits), awards, categories or tags, link, and timestamp (creation date or birthdate in seconds). If any of these parameters are not applicable or available, just set them to null. Detect the user's language to give a response in the same language."
+          "content": "$chatSystemMessage"
         },
         {
           "role": "user",
           "content": "$query"
         }
       ],
-      "max_tokens": 2000,
-      "temperature": 0.7
+      "max_tokens": $chatMaxTokens,
+      "temperature": $chatTemperature
     }
     ''';
 
@@ -91,7 +99,7 @@ class RankingChatGpt implements RankingRemoteDatasource {
     {
       "prompt": "$query",
       "n": 1,
-      "size": "256x256"
+      "size": "$imageSize",
     }
     ''';
 

@@ -13,14 +13,14 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:logger/logger.dart' as _i974;
 import 'package:ranking/core/di/environment.dart' as _i755;
 import 'package:ranking/core/di/injection.dart' as _i882;
+import 'package:ranking/data/datasources/ranking/ranking_chatgpt_datasource_implementation.dart'
+    as _i7;
 import 'package:ranking/data/datasources/ranking/ranking_local_datasource.dart'
     as _i697;
 import 'package:ranking/data/datasources/ranking/ranking_local_datasource_implementation.dart'
     as _i798;
 import 'package:ranking/data/datasources/ranking/ranking_remote_datasource.dart'
     as _i51;
-import 'package:ranking/data/datasources/ranking/ranking_remote_datasource_implementation.dart'
-    as _i390;
 import 'package:ranking/data/repositories/ranking_repository_impl.dart'
     as _i506;
 import 'package:ranking/data/services/api_service.dart' as _i894;
@@ -51,7 +51,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i894.ApiService>(() => apiServiceModule.httpClient);
     gh.factory<_i697.RankingLocalDatasource>(
         () => _i798.RankingAsset(gh<_i974.Logger>()));
-    gh.factory<_i51.RankingRemoteDatasource>(() => _i390.RankingChatGpt(
+    gh.factory<_i51.RankingRemoteDatasource>(() => _i7.RankingChatGpt(
           gh<_i974.Logger>(),
           gh<_i894.ApiService>(),
           gh<_i755.Env>(),
