@@ -75,13 +75,13 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
 
   void _launchUrl(String? url) async {
     if (url == null || url.isEmpty) {
-        _emitInvalidUrl();
+      _emitInvalidUrl();
     } else {
       try {
         final Uri uri = Uri.parse(url);
         if (!await launchUrl(uri)) {
           // if the URL was NOT launched successfully
-        _emitInvalidUrl();
+          _emitInvalidUrl();
         }
       } on FormatException catch (e) {
         logger.e(e.message, error: e);
@@ -103,17 +103,20 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
     for (final item in newItems) {
       if (item.imageUrl != null) continue;
       final imageResult = _getImageUrlUseCase(query: item.title);
-      imageResult.mapRight((url) {
-        logger.i('Image URL: $url');
-        _items.firstWhere((element) {
-          return element.title == item.title;
-        }).imageUrl = url;
-        emitValue(Success(_items));
-      });
+      imageResult.fold(
+        (error) => _setImageUrl(item, ''),
+        (url) => _setImageUrl(item, url),
+      );
     }
   }
 
-
+  void _setImageUrl(RankingItem item, String url) {
+    logger.i('Image URL: $url');
+    _items.firstWhere((element) {
+      return element.title == item.title;
+    }).imageUrl = url;
+    emitValue(Success(_items));
+  }
 }
 
 sealed class HomeViewModelState extends ViewState {

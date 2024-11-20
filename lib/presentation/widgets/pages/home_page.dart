@@ -359,14 +359,18 @@ class _HomePageState
   Widget _getCircularImage(String? imageUrl, {required double size}) {
     return CircleAvatar(
       radius: size,
-      backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
+      backgroundImage:
+          imageUrl?.isNotEmpty ?? false ? NetworkImage(imageUrl!) : null,
       child: imageUrl == null
-          ? Icon(
-              Icons.broken_image,
-              size: 35,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-            )
-          : null,
+          ? const CircularProgressIndicator()
+          : imageUrl.isEmpty
+              ? Icon(
+                  Icons.broken_image,
+                  size: 35,
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                )
+              : null,
     );
   }
 }
