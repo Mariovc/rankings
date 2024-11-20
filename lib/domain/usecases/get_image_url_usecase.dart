@@ -10,8 +10,11 @@ class GetImageUrlUseCase {
   GetImageUrlUseCase(this.repository);
 
   Future<Either<MainError, String>> call({
+    required String rankingQuery,
     required String query,
   }) {
-    return repository.getImageUrl(query: query);
+    return repository.getImageUrl(
+      rankingQuery: rankingQuery,
+      title: query);
   }
 }

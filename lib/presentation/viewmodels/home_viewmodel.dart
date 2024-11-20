@@ -54,7 +54,7 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
       (newItems) {
         _items.clear();
         _items.addAll(newItems);
-        _fetchImages(newItems);
+        _fetchImages(_query, newItems);
         emitValue(Success(_items));
       },
     );
@@ -99,10 +99,13 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
     emitValue(Error(_items, 'home.invalid_url'.tr()));
   }
 
-  void _fetchImages(List<RankingItem> newItems) {
+  void _fetchImages(String rankingQuery, List<RankingItem> newItems) {
     for (final item in newItems) {
       if (item.imageUrl != null) continue;
-      final imageResult = _getImageUrlUseCase(query: item.title);
+      final imageResult = _getImageUrlUseCase(
+        rankingQuery: rankingQuery,
+        query: item.title,
+      );
       imageResult.fold(
         (error) => _setImageUrl(item, ''),
         (url) => _setImageUrl(item, url),

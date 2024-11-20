@@ -93,13 +93,14 @@ class RankingChatGpt implements RankingRemoteDatasource {
 
   @override
   Future<Either<MainError, String>> getImageUrl({
-    required String query,
+    required String rankingQuery,
+    required String title,
   }) async {
     final String requestBody = '''
     {
-      "prompt": "$query",
+      "prompt": "Image of '$title' for this ranking: '$rankingQuery'",
       "n": 1,
-      "size": "$imageSize",
+      "size": "$imageSize"
     }
     ''';
 

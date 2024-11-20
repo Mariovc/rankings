@@ -7,6 +7,7 @@ abstract class RankingRemoteDatasource {
     required String query,
   });
   Future<Either<MainError, String>> getImageUrl({
-    required String query,
+    required String rankingQuery,
+    required String title,
   });
 }

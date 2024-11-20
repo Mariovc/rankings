@@ -8,6 +8,7 @@ abstract class RankingRepository {
   });
   Future<Either<MainError, String>> getDefaultRankingSearch();
   Future<Either<MainError, String>> getImageUrl({
-    required String query,
+    required String rankingQuery,
+    required String title,
   });
 }
