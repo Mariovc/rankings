@@ -1,7 +1,7 @@
 class RankingItem {
   final String title;
   final String description;
-  final String? imageUrl;
+  String? imageUrl;
   final double? rating;
   final String? countryCode;
   final List<String> awards;

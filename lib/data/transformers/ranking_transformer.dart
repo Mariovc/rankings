@@ -19,6 +19,7 @@ class RankingTransformer {
       timestamp: json['timestamp'] != null
           ? DateTime.fromMillisecondsSinceEpoch(json['timestamp'] * 1000)
           : null,
+      imageUrl: json['image_url'] as String?,
     );
   }
 }

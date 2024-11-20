@@ -13,7 +13,8 @@
             "Startups"
         ],
         "link": "https://en.wikipedia.org/wiki/The_Lean_Startup",
-        "timestamp": 1315872000
+        "timestamp": 1315872000,
+        "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/1/11/Lean_Startup.png/220px-Lean_Startup.png"
     },
     {
         "title": "Zero to One by Peter Thiel",
@@ -29,7 +30,8 @@
             "Startups"
         ],
         "link": "https://en.wikipedia.org/wiki/Zero_to_One",
-        "timestamp": 1410825600
+        "timestamp": 1410825600,
+        "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Zero_to_One.jpg/220px-Zero_to_One.jpg"
     },
     {
         "title": "The Hard Thing About Hard Things",
@@ -43,7 +45,8 @@
             "Management"
         ],
         "link": "https://en.wikipedia.org/wiki/Ben_Horowitz",
-        "timestamp": 1395100800
+        "timestamp": 1395100800,
+        "image_url": "https://bci.kinokuniya.com/jsp/images/book-img/97861/97861628/9786162873652.JPG"
     },
     {
         "title": "Think and Grow Rich by Napoleon Hill",
@@ -57,7 +60,8 @@
             "Finance"
         ],
         "link": "https://en.wikipedia.org/wiki/Think_and_Grow_Rich",
-        "timestamp": -1104537600
+        "timestamp": -1104537600,
+        "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e9/Think_and_grow_rich_original_cover.jpg/160px-Think_and_grow_rich_original_cover.jpg"
     },
     {
         "title": "Rich Dad Poor Dad by Robert Kiyosaki",
@@ -71,7 +75,8 @@
             "Self-help"
         ],
         "link": "https://en.wikipedia.org/wiki/Rich_Dad_Poor_Dad",
-        "timestamp": 894931200
+        "timestamp": 894931200,
+        "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/b/b9/Rich_Dad_Poor_Dad.jpg/220px-Rich_Dad_Poor_Dad.jpg"
     },
     {
         "title": "Start with Why by Simon Sinek",
@@ -85,7 +90,8 @@
             "Motivation"
         ],
         "link": "https://en.wikipedia.org/wiki/Simon_Sinek",
-        "timestamp": 1251763200
+        "timestamp": 1251763200,
+        "image_url": "https://m.media-amazon.com/images/I/71M1P287BjL._AC_UF894,1000_QL80_.jpg"
     },
     {
         "title": "Blue Ocean Strategy by Kim & Mauborgne",
@@ -99,7 +105,8 @@
             "Innovation"
         ],
         "link": "https://en.wikipedia.org/wiki/Blue_Ocean_Strategy",
-        "timestamp": 1108684800
+        "timestamp": 1108684800,
+        "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a3/BOStrategy.jpg/220px-BOStrategy.jpg"
     },
     {
         "title": "The E-Myth Revisited by Michael Gerber",
@@ -113,7 +120,8 @@
             "Management"
         ],
         "link": "https://en.wikipedia.org/wiki/Michael_E._Gerber",
-        "timestamp": 883612800
+        "timestamp": 883612800,
+        "image_url": "https://m.media-amazon.com/images/I/61iuBCYPuUL.jpg"
     },
     {
         "title": "Crushing It! by Gary Vaynerchuk",
@@ -127,7 +135,8 @@
             "Marketing"
         ],
         "link": "https://en.wikipedia.org/wiki/Gary_Vaynerchuk",
-        "timestamp": 1516838400
+        "timestamp": 1516838400,
+        "image_url": "https://m.media-amazon.com/images/I/71LYrLks5-L._AC_UF894,1000_QL80_.jpg"
     },
     {
         "title": "Rework by Jason Fried & D. Heinemeier Hansson",
@@ -141,6 +150,7 @@
             "Productivity"
         ],
         "link": "https://en.wikipedia.org/wiki/Rework_(book)",
-        "timestamp": 1267401600
+        "timestamp": 1267401600,
+        "image_url": "https://m.media-amazon.com/images/I/71CVp5P3x3L._AC_UF894,1000_QL80_.jpg"
     }
 ]

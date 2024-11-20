@@ -31,4 +31,11 @@ class RankingRepositoryImpl implements RankingRepository {
   Future<Either<MainError, String>> getDefaultRankingSearch() {
     return localDataSource.getDefaultRankingSearch();
   }
+
+  @override
+  Future<Either<MainError, String>> getImageUrl({
+    required String query,
+  }) {
+    return remoteDataSource.getImageUrl(query: query);
+  }
 }

@@ -28,7 +28,7 @@ class RankingChatGpt implements RankingRemoteDatasource {
       "messages": [
         {
           "role": "system",
-          "content": "You are an AI assistant that generates detailed, structured rankings in JSON format as a list of items. Each ranking item should include a title (60 characters maximum), description (120 characters maximum), rating (out of 5), countryCode (origin or author's origin in ISO with 2 digits), awards, categories or tags, link, and timestamp (creation date in seconds). If any of these parameters are not applicable or available, just set them to null. Detect the user's language to give a response in the same language."
+          "content": "You are an AI assistant that generates detailed, structured rankings in JSON format as a list of items. Each ranking item should include a title (60 characters maximum but as short as possible), description (120 characters maximum), rating (out of 5), countryCode (origin or author's origin in ISO with 2 digits), awards, categories or tags, link, and timestamp (creation date or birthdate in seconds). If any of these parameters are not applicable or available, just set them to null. Detect the user's language to give a response in the same language."
         },
         {
           "role": "user",
@@ -81,5 +81,30 @@ class RankingChatGpt implements RankingRemoteDatasource {
       logger.e('No JSON content found');
       return Left(ParsingError());
     }
+  }
+
+  @override
+  Future<Either<MainError, String>> getImageUrl({
+    required String query,
+  }) async {
+    final String requestBody = '''
+    {
+      "prompt": "$query",
+      "n": 1,
+      "size": "256x256"
+    }
+    ''';
+
+    return _apiService.post<String>(
+      Uri.https(_envConfig.baseUrl, '/v1/images/generations'),
+      data: requestBody,
+      headers: {
+        'Authorization': 'Bearer ${_envConfig.apiKey}',
+        'Content-Type': 'application/json',
+      },
+    ).mapRight((response) {
+      final data = jsonDecode(response);
+      return data['data'][0]['url'];
+    });
   }
 }

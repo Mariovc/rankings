@@ -27,6 +27,7 @@ import 'package:ranking/data/services/api_service.dart' as _i894;
 import 'package:ranking/domain/repositories/ranking_repository.dart' as _i749;
 import 'package:ranking/domain/usecases/get_default_ranking_search_usecase.dart'
     as _i746;
+import 'package:ranking/domain/usecases/get_image_url_usecase.dart' as _i804;
 import 'package:ranking/domain/usecases/get_ranking_usecase.dart' as _i731;
 import 'package:ranking/presentation/navigation/main_navigation.dart' as _i708;
 import 'package:ranking/presentation/viewmodels/home_viewmodel.dart' as _i910;
@@ -63,10 +64,13 @@ extension GetItInjectableX on _i174.GetIt {
         _i746.GetDefaultRankingSearchUseCase(gh<_i749.RankingRepository>()));
     gh.factory<_i731.GetRankingUseCase>(
         () => _i731.GetRankingUseCase(gh<_i749.RankingRepository>()));
+    gh.factory<_i804.GetImageUrlUseCase>(
+        () => _i804.GetImageUrlUseCase(gh<_i749.RankingRepository>()));
     gh.factory<_i910.HomeViewModel>(() => _i910.HomeViewModel(
           gh<_i974.Logger>(),
           gh<_i731.GetRankingUseCase>(),
           gh<_i746.GetDefaultRankingSearchUseCase>(),
+          gh<_i804.GetImageUrlUseCase>(),
         ));
     return this;
   }

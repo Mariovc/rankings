@@ -39,7 +39,7 @@ class _HomePageState
   ) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final List<RankingItem> items = viewModel.items;
+    final List<RankingItem> items = state.items;
     final buildPodium = items.length >= 3;
 
     return Scaffold(

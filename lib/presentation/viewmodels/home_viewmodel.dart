@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:either_dart/either.dart';
 import 'package:ranking/domain/entities/ranking_item.dart';
 import 'package:ranking/domain/usecases/get_default_ranking_search_usecase.dart';
+import 'package:ranking/domain/usecases/get_image_url_usecase.dart';
 import 'package:ranking/domain/usecases/get_ranking_usecase.dart';
 import 'package:ranking/presentation/util/error_extension.dart';
 import 'package:ranking/presentation/viewmodels/root_viewmodel.dart';
@@ -17,19 +19,20 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
   final Logger logger;
   final GetRankingUseCase _getImagesUseCase;
   final GetDefaultRankingSearchUseCase _getDefaultRankingSearchUseCase;
+  final GetImageUrlUseCase _getImageUrlUseCase;
 
   String _query = '';
   final List<RankingItem> _items = [];
 
   final searchController = TextEditingController();
-  List<RankingItem> get items => _items;
   bool get isSearchEmpty => searchController.text.isEmpty;
 
   HomeViewModel(
     this.logger,
     this._getImagesUseCase,
     this._getDefaultRankingSearchUseCase,
-  ) : super(const Success()) {
+    this._getImageUrlUseCase,
+  ) : super(Success([])) {
     _setSeachQuery();
     _loadItems();
   }
@@ -41,17 +44,18 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
   }
 
   Future<void> _loadItems([String? query]) async {
-    emitValue(const Loading());
+    emitValue(Loading(_items));
     _query = query ?? '';
     final result = await _getImagesUseCase(
       query: _query,
     );
     result.fold(
-      (error) => emitValue(Error(error.message)),
+      (error) => emitValue(Error(_items, error.message)),
       (newItems) {
         _items.clear();
-        items.addAll(newItems);
-        emitValue(const Success());
+        _items.addAll(newItems);
+        _fetchImages(newItems);
+        emitValue(Success(_items));
       },
     );
   }
@@ -71,41 +75,62 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
 
   void _launchUrl(String? url) async {
     if (url == null || url.isEmpty) {
-      emitValue(Error('home.invalid_url'.tr()));
+        _emitInvalidUrl();
     } else {
       try {
         final Uri uri = Uri.parse(url);
         if (!await launchUrl(uri)) {
           // if the URL was NOT launched successfully
-          emitValue(Error('home.invalid_url'.tr()));
+        _emitInvalidUrl();
         }
       } on FormatException catch (e) {
         logger.e(e.message, error: e);
         // Handle FormatException
-        emitValue(Error('home.invalid_url'.tr()));
+        _emitInvalidUrl();
       } on PlatformException catch (e) {
         logger.e(e.message, error: e);
         // Handle PlatformException
-        emitValue(Error('home.invalid_url'.tr()));
+        _emitInvalidUrl();
       }
     }
   }
+
+  void _emitInvalidUrl() {
+    emitValue(Error(_items, 'home.invalid_url'.tr()));
+  }
+
+  void _fetchImages(List<RankingItem> newItems) {
+    for (final item in newItems) {
+      if (item.imageUrl != null) continue;
+      final imageResult = _getImageUrlUseCase(query: item.title);
+      imageResult.mapRight((url) {
+        logger.i('Image URL: $url');
+        _items.firstWhere((element) {
+          return element.title == item.title;
+        }).imageUrl = url;
+        emitValue(Success(_items));
+      });
+    }
+  }
+
+
 }
 
 sealed class HomeViewModelState extends ViewState {
-  const HomeViewModelState();
+  final List<RankingItem> items;
+  const HomeViewModelState(this.items);
 }
 
 class Loading extends HomeViewModelState {
-  const Loading();
+  Loading(super.items);
 }
 
 class Error extends HomeViewModelState {
   final String message;
 
-  const Error(this.message);
+  Error(super.items, this.message);
 }
 
 class Success extends HomeViewModelState {
-  const Success();
+  Success(super.items);
 }

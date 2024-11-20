@@ -8,6 +8,7 @@ class ApiService extends DioRestService<MainError> {
       : super(
           validCodes: [200, 201, 204],
           catchErrors: errorsHandler,
+          receiveTimeout: 90000,
         );
 }
 
