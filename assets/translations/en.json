@@ -22,6 +22,7 @@
         "email_already_in_use": "Email already in use",
         "weak_password": "Weak password",
         "operation_not_allowed": "Operation not allowed",
+        "parsing": "Parsing error",
         "unknown": "Something went wrong"
     }
 }

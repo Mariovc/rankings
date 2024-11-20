@@ -94,22 +94,33 @@ class _HomePageState
           ),
         ),
       ),
-      body: ListView.builder(
-        // Add 1 for the podium
-        itemCount: items.length + (buildPodium ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (buildPodium && index == 0) {
-            // Return the podium as the first item
-            return _buildPodium(items.sublist(0, 3));
-          } else {
-            // Return the list items
-            return _getItem(
-              context,
-              items[buildPodium ? index - 1 : index],
-              index,
-            );
-          }
-        },
+      body: Stack(
+        children: [
+          ListView.builder(
+            // Add 1 for the podium
+            itemCount: items.length + (buildPodium ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (buildPodium && index == 0) {
+                // Return the podium as the first item
+                return _buildPodium(items.sublist(0, 3));
+              } else {
+                // Return the list items
+                return _getItem(
+                  context,
+                  items[buildPodium ? index - 1 : index],
+                  index,
+                );
+              }
+            },
+          ),
+          if (state is Loading)
+            Container(
+              color: Colors.black.withOpacity(0.7),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+        ],
       ),
     );
   }

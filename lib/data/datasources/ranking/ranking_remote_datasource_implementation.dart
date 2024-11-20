@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:either_dart/either.dart';
+import 'package:logger/logger.dart';
 import 'package:ranking/core/di/environment.dart';
 import 'package:ranking/data/datasources/ranking/ranking_remote_datasource.dart';
 import 'package:ranking/data/services/api_service.dart';
@@ -11,49 +12,48 @@ import 'package:injectable/injectable.dart';
 
 @Injectable(as: RankingRemoteDatasource)
 class RankingChatGpt implements RankingRemoteDatasource {
+  final Logger logger;
   final ApiService _apiService;
   final Env _envConfig;
-  final String _defaultQuery = '*';
 
-  RankingChatGpt(this._apiService, this._envConfig);
+  RankingChatGpt(this.logger, this._apiService, this._envConfig);
 
-  // Example JSON response
-  String jsonResponse = '''{
-	"id": "chatcmpl-AUM3wlEAnXFt7j8YcjaGW2cp0UzER",
-	"object": "chat.completion",
-	"created": 1731798012,
-	"model": "gpt-4o-mini-2024-07-18",
-	"choices": [
-		{
-			"index": 0,
-			"message": {
-				"role": "assistant",
-				"content": "```json\n[\n    {\n        "title": "Catan",\n        "description": "A strategy game where players collect resources to build settlements.",\n        "image_url": "https://example.com/images/catan.jpg",\n        "rating": 4.7,\n        "score": 95,\n        "location": "Germany",\n        "awards": ["Spiel des Jahres 1995"],\n        "categories": ["Strategy", "Resource Management"],\n        "dominant_color": "#FFD700",\n        "link": "https://example.com/catan",\n        "price": "\$44.99",\n        "likes": 12000,\n        "timestamp": 1633046400,\n        "country": "DE"\n    },\n    {\n        "title": "Ticket to Ride",\n        "description": "A railway-themed board game where players claim train routes across the map.",\n        "image_url": "https://example.com/images/ticket_to_ride.jpg",\n        "rating": 4.6,\n        "score": 92,\n        "location": "USA",\n        "awards": ["Spiel des Jahres 2004"],\n        "categories": ["Family", "Strategy"],\n        "dominant_color": "#C0C0C0",\n        "link": "https://example.com/ticket_to_ride",\n        "price": "\$49.99",\n        "likes": 9500,\n        "timestamp": 1633046400,\n        "country": "US"\n    },\n    {\n        "title": "Pandemic",\n        "description": "A cooperative game where players work together to stop global outbreaks.",\n        "image_url": "https://example.com/images/pandemic.jpg",\n        "rating": 4.5,\n        "score": 90,\n        "location": "USA",\n        "awards": ["International Gamers Award 2013"],\n        "categories": ["Cooperative", "Strategy"],\n        "dominant_color": "#FF6347",\n        "link": "https://example.com/pandemic",\n        "price": "\$39.99",\n        "likes": 8000,\n        "timestamp": 1633046400,\n        "country": "ES"\n    }\n]\n```",
-				"refusal": null
-			},
-			"logprobs": null,
-			"finish_reason": "stop"
-		}
-	],
-	"usage": {
-		"prompt_tokens": 132,
-		"completion_tokens": 462,
-		"total_tokens": 594,
-		"prompt_tokens_details": {
-			"cached_tokens": 0,
-			"audio_tokens": 0
-		},
-		"completion_tokens_details": {
-			"reasoning_tokens": 0,
-			"audio_tokens": 0,
-			"accepted_prediction_tokens": 0,
-			"rejected_prediction_tokens": 0
-		}
-	},
-	"system_fingerprint": "fp_9b78b61c52"
-}''';
+  @override
+  Future<Either<MainError, List<RankingItem>>> getRanking({
+    required String query,
+  }) async {
+    final String requestBody = '''
+    {
+      "model": "gpt-4o-mini",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an AI assistant that generates detailed, structured rankings in JSON format as a list of items. Each ranking item should include a title (60 characters maximum), description (120 characters maximum), rating (out of 5), countryCode (origin or author's origin in ISO with 2 digits), awards, categories or tags, link, and timestamp (creation date in seconds). If any of these parameters are not applicable or available, just set them to null. Detect the user's language to give a response in the same language."
+        },
+        {
+          "role": "user",
+          "content": "$query"
+        }
+      ],
+      "max_tokens": 2000,
+      "temperature": 0.7
+    }
+    ''';
 
-  Future<Either<MainError, List<RankingItem>>> parseResponse() async {
+    return _apiService.post<String>(
+        Uri.https(_envConfig.baseUrl, '/v1/chat/completions'),
+        data: requestBody,
+        headers: {
+          'Authorization': 'Bearer ${_envConfig.apiKey}',
+          'Content-Type': 'application/json',
+        }).thenRight((response) => parseResponse(response));
+  }
+
+  Future<Either<MainError, List<RankingItem>>> parseResponse(
+    String jsonResponse,
+  ) async {
+    logger.d('Parsing response: $jsonResponse');
+
     final regex = RegExp(r'```json\s*(.+?)\s*```', dotAll: true);
     final match = regex.firstMatch(jsonResponse);
 
@@ -61,31 +61,25 @@ class RankingChatGpt implements RankingRemoteDatasource {
       // The captured group contains the JSON content
       String jsonString = match.group(1)!;
 
-      // Decode the extracted JSON
+      // Remove newlines and quotes
+      jsonString = jsonString.replaceAll(r'\n', '').replaceAll(r'\"', '"');
+
       List<dynamic> jsonList = jsonDecode(jsonString);
 
-      print(jsonList);
+      logger.i('Parsed JSON with ${jsonList.length} items');
 
-      // Process the list into BoardGame objects
+      // Process the list into Ranking item objects
       List<RankingItem> rankingItems = jsonList
           .map((itemJson) => RankingTransformer.fromJson(itemJson))
           .toList();
 
-      // Print the parsed games
       for (var item in rankingItems) {
-        print("Ranking Item: ${item.title}, Rating: ${item.rating}");
+        logger.i('Ranking Item: ${item.title}, Rating: ${item.rating}');
       }
       return Right(rankingItems);
     } else {
-      print("No JSON content found between ```json and ```");
-      return Left(ServerError());
+      logger.e('No JSON content found');
+      return Left(ParsingError());
     }
-  }
-
-  @override
-  Future<Either<MainError, List<RankingItem>>> getRanking({
-    required String query,
-  }) {
-    return parseResponse();
   }
 }

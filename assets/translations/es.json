@@ -22,6 +22,7 @@
         "email_already_in_use": "Correo electrónico ya en uso",
         "weak_password": "Contraseña débil",
         "operation_not_allowed": "Operación no permitida",
+        "parsing": "Error de análisis",
         "unknown": "Algo salió mal"
     }
 }

@@ -43,3 +43,5 @@ class EmailAlreadyInUseError extends ApiError {}
 class WeakPasswordError extends ApiError {}
 
 class OperationNotAllowedError extends ApiError {}
+
+class ParsingError extends ApiError {}

@@ -28,6 +28,8 @@ extension ErrorMessage on MainError {
         return 'errors.weak_password'.tr();
       case const (OperationNotAllowedError):
         return 'errors.operation_not_allowed'.tr();
+      case const (ParsingError):
+        return 'errors.parsing'.tr();
       case const (UnknownError):
       default:
         return 'errors.unknown'.tr();
