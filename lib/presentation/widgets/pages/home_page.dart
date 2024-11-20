@@ -108,7 +108,7 @@ class _HomePageState
                 return _getItem(
                   context,
                   items[buildPodium ? index - 1 : index],
-                  index,
+                  buildPodium ? index : index + 1,
                 );
               }
             },
