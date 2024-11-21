@@ -1,7 +1,12 @@
+import 'package:copy_with_extension/copy_with_extension.dart';
+
+part 'ranking_item.g.dart';
+
+@CopyWith()
 class RankingItem {
   final String title;
   final String description;
-  String? imageUrl;
+  final String? imageUrl;
   final double? rating;
   final String? countryCode;
   final List<String> awards;

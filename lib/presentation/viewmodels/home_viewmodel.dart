@@ -22,19 +22,26 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
   final GetImageUrlUseCase _getImageUrlUseCase;
 
   String _query = '';
-  final List<RankingItem> _items = [];
+  List<RankingItem> _items = [];
+  final StreamController<List<RankingItem>> _itemsStream = StreamController();
 
   final searchController = TextEditingController();
   bool get isSearchEmpty => searchController.text.isEmpty;
+  Stream<List<RankingItem>> get itemsStream => _itemsStream.stream;
 
   HomeViewModel(
     this.logger,
     this._getImagesUseCase,
     this._getDefaultRankingSearchUseCase,
     this._getImageUrlUseCase,
-  ) : super(Success([])) {
+  ) : super(Success()) {
     _setSeachQuery();
     _loadItems();
+  }
+
+  void dispose() {
+    _itemsStream.close();
+    searchController.dispose();
   }
 
   void _setSeachQuery() {
@@ -44,18 +51,18 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
   }
 
   Future<void> _loadItems([String? query]) async {
-    emitValue(Loading(_items));
+    emitValue(Loading());
     _query = query ?? '';
     final result = await _getImagesUseCase(
       query: _query,
     );
     result.fold(
-      (error) => emitValue(Error(_items, error.message)),
+      (error) => emitValue(Error(error.message)),
       (newItems) {
-        _items.clear();
-        _items.addAll(newItems);
+        _items = newItems;
+        _itemsStream.add(newItems);
         _fetchImages(_query, newItems);
-        emitValue(Success(_items));
+        emitValue(Success());
       },
     );
   }
@@ -96,7 +103,7 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
   }
 
   void _emitInvalidUrl() {
-    emitValue(Error(_items, 'home.invalid_url'.tr()));
+    emitValue(Error('home.invalid_url'.tr()));
   }
 
   void _fetchImages(String rankingQuery, List<RankingItem> newItems) {
@@ -115,28 +122,28 @@ class HomeViewModel extends RootViewModel<HomeViewModelState> {
 
   void _setImageUrl(RankingItem item, String url) {
     logger.i('Image URL: $url');
-    _items.firstWhere((element) {
-      return element.title == item.title;
-    }).imageUrl = url;
-    emitValue(Success(_items));
+    final index = _items.indexWhere((element) => element.title == item.title);
+    if (index != -1) {
+      _items[index] = item.copyWith(imageUrl: url);
+      _itemsStream.add(_items);
+    }
   }
 }
 
 sealed class HomeViewModelState extends ViewState {
-  final List<RankingItem> items;
-  const HomeViewModelState(this.items);
+  const HomeViewModelState();
 }
 
 class Loading extends HomeViewModelState {
-  Loading(super.items);
+  Loading();
 }
 
 class Error extends HomeViewModelState {
   final String message;
 
-  Error(super.items, this.message);
+  Error(this.message);
 }
 
 class Success extends HomeViewModelState {
-  Success(super.items);
+  Success();
 }

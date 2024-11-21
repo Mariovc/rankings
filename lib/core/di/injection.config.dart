@@ -62,10 +62,10 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i746.GetDefaultRankingSearchUseCase>(() =>
         _i746.GetDefaultRankingSearchUseCase(gh<_i749.RankingRepository>()));
-    gh.factory<_i731.GetRankingUseCase>(
-        () => _i731.GetRankingUseCase(gh<_i749.RankingRepository>()));
     gh.factory<_i804.GetImageUrlUseCase>(
         () => _i804.GetImageUrlUseCase(gh<_i749.RankingRepository>()));
+    gh.factory<_i731.GetRankingUseCase>(
+        () => _i731.GetRankingUseCase(gh<_i749.RankingRepository>()));
     gh.factory<_i910.HomeViewModel>(() => _i910.HomeViewModel(
           gh<_i974.Logger>(),
           gh<_i731.GetRankingUseCase>(),

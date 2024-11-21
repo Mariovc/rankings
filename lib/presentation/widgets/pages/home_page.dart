@@ -21,6 +21,7 @@ class _HomePageState
   void dispose() {
     super.dispose();
     _focusNode.dispose();
+    viewModel.dispose();
   }
 
   @override
@@ -39,8 +40,6 @@ class _HomePageState
   ) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final List<RankingItem> items = state.items;
-    final buildPodium = items.length >= 3;
 
     return Scaffold(
       appBar: AppBar(
@@ -96,23 +95,30 @@ class _HomePageState
       ),
       body: Stack(
         children: [
-          ListView.builder(
-            // Add 1 for the podium
-            itemCount: items.length + (buildPodium ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (buildPodium && index == 0) {
-                // Return the podium as the first item
-                return _buildPodium(items.sublist(0, 3));
-              } else {
-                // Return the list items
-                return _getItem(
-                  context,
-                  items[buildPodium ? index - 1 : index],
-                  buildPodium ? index : index + 1,
+          StreamBuilder<List<RankingItem>>(
+              stream: viewModel.itemsStream,
+              builder: (context, snapshot) {
+                final items = snapshot.data ?? [];
+                final buildPodium = items.length >= 3;
+                
+                return ListView.builder(
+                  // Add 1 for the podium
+                  itemCount: items.length + (buildPodium ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (buildPodium && index == 0) {
+                      // Return the podium as the first item
+                      return _buildPodium(items.sublist(0, 3));
+                    } else {
+                      // Return the list items
+                      return _getItem(
+                        context,
+                        items[buildPodium ? index - 1 : index],
+                        buildPodium ? index : index + 1,
+                      );
+                    }
+                  },
                 );
-              }
-            },
-          ),
+              }),
           if (state is Loading)
             Container(
               color: Colors.black.withOpacity(0.7),
