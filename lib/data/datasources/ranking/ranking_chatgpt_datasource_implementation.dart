@@ -18,7 +18,7 @@ class RankingChatGpt implements RankingRemoteDatasource {
 
   static const String chatModel = 'gpt-4o';
   static const String chatSystemMessage =
-      "You are an AI assistant that generates detailed, structured rankings in JSON format as a list of items. Each ranking item should include a title (60 characters maximum but as short as possible), description (120 characters maximum), rating (out of 5), countryCode (origin or author's origin in ISO with 2 digits), awards, categories or tags, link, and timestamp (creation date or birthdate in seconds). If any of these parameters are not applicable or available, just set them to null. Detect the user's language to give a response in the same language.";
+      "You are an AI assistant that generates detailed, structured rankings in JSON format as a list of items without comments, just JSON. Each ranking item should include a title (60 characters maximum but as short as possible), description (120 characters maximum), rating (out of 5), countryCode (origin or author's origin in ISO with 2 digits), awards, categories or tags, link, and timestamp (creation date or birthdate in seconds). If any of these parameters are not applicable or available, just set them to null. Detect the user's language to give a response in the same language.";
   static const int chatMaxTokens = 2000;
   static const double chatTemperature = 0.7;
 
@@ -72,19 +72,24 @@ class RankingChatGpt implements RankingRemoteDatasource {
       // Remove newlines and quotes
       jsonString = jsonString.replaceAll(r'\n', '').replaceAll(r'\"', '"');
 
-      List<dynamic> jsonList = jsonDecode(jsonString);
+      try {
+        List<dynamic> jsonList = jsonDecode(jsonString);
 
-      logger.i('Parsed JSON with ${jsonList.length} items');
+        logger.i('Parsed JSON with ${jsonList.length} items');
 
-      // Process the list into Ranking item objects
-      List<RankingItem> rankingItems = jsonList
-          .map((itemJson) => RankingTransformer.fromJson(itemJson))
-          .toList();
+        // Process the list into Ranking item objects
+        List<RankingItem> rankingItems = jsonList
+            .map((itemJson) => RankingTransformer.fromJson(itemJson))
+            .toList();
 
-      for (var item in rankingItems) {
-        logger.i('Ranking Item: ${item.title}, Rating: ${item.rating}');
+        for (var item in rankingItems) {
+          logger.i('Ranking Item: ${item.title}, Rating: ${item.rating}');
+        }
+        return Right(rankingItems);
+      } on FormatException catch (e) {
+        logger.e('Invalid JSON format: ${e.message}');
+        return Left(ParsingError());
       }
-      return Right(rankingItems);
     } else {
       logger.e('No JSON content found');
       return Left(ParsingError());
